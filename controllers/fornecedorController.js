@@ -18,13 +18,13 @@ async function buscarCnpj(cnpj){
 async function cadastroFornecedor(req, res) {
     const cnpj = req.body.cnpj;
     const cnpjLimpo = limparCnpj(cnpj);
-    const existe = buscarCnpj(cnpj);
+    const existe = await buscarCnpj(cnpj);
     if(existe){
-        res.send("Cnpj já existente no banco de dados.");
+        res.status(400).json({message:"Cnpj já existente no banco de dados."});
     }else{
     try{
         const response = await axios.get(`https://receitaws.com.br/v1/cnpj/${cnpjLimpo}`);
-        endereco = response.data.logradouro + response.data.numero + response.data.complemento + response.data.cep;
+        const endereco = response.data.logradouro + response.data.numero + response.data.complemento + response.data.cep;
         const fornecedor = {
             "nome_forn":response.data.nome,
             "cnpj":cnpj,
@@ -33,10 +33,10 @@ async function cadastroFornecedor(req, res) {
             "endereco": endereco
         }
         await Fornecedor.create(fornecedor);
-        res.send("Fornecedor cadastrado com sucesso."+fornecedor);
+        res.status(200).json({message:"Fornercedor Cadastrado."});
     }catch(error){
         console.log(error);
-        res.send(500).send("Erro ao busca CPF:"+error);
+        res.send(500).json({message:"Erro ao busca CPF:"});
     }
     }
 }

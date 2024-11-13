@@ -40,10 +40,8 @@ const Usuario = sequelize.define("Usuario", {
         }
     }
 );
-
+async function criptrografarSenha(senha){
+    return await bcrypt.hash(senha, 10);
+}
 module.exports = Usuario;
 
-async function criptrografarSenha(senha){
-    const senha_criptografada = await bcrypt.hash(senha, 10);
-    return senha_criptografada;
-}
