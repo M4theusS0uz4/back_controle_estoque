@@ -12,5 +12,21 @@ const Especificacoes_prod = sequelize.define('Especificacoes_prod', {
         type: DataTypes.STRING,
         allowNull: false,
 
+    },
+    tamanho:{
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    tipo:{
+        type: DataTypes.ENUM,
+        values: ['Tênis', 'Bota', 'Chinelo','Chuteira'],
+        allowNull: false,
+    },
+    genero:{
+        type: DataTypes.ENUM,
+        values: ['Masculino, Feminino'],
+        allowNull: false,
     }
-})
+},{tableName: 'especificacoes_prod'});
+
+module.exports = Especificacoes_prod;

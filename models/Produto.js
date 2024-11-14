@@ -10,8 +10,11 @@ const Produto = sequelize.define('Produto', {
     },
     num_lote:{
         type: DataTypes.INTEGER,
-        foreignKey: 'num_lote',
-        allowNull: false
+        allowNull: false,
+        references:{
+            model:'Lote',
+            key: 'num_lote',
+        }
     },
     nome_prod:{
         type: DataTypes.STRING,
@@ -25,10 +28,10 @@ const Produto = sequelize.define('Produto', {
         type: DataTypes.DOUBLE,
         allowNull: false,
     },
-    quantidade:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    }
+    imagem_url:{
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 },{
     tableName: 'Produto',
     }
