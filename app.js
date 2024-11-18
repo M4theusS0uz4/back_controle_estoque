@@ -4,12 +4,17 @@ const produtoRoutes = require('./routes/produtoRoutes');
 const loteRoutes = require('./routes/loteRoutes');
 const fornecedorRoutes = require('./routes/fornecedorRoutes');
 const path = require("path");
+const cors = require('cors');
+
 
 const app = express();
 app.use(express.json());
 
 
-app.use('/user',usuarioRoutes);
+app.options('*', cors({ origin: "*" }))
+app.use(cors());
+
+app.use('/usuario',usuarioRoutes);
 app.use('/produto',produtoRoutes);
 app.use('/fornecedor',fornecedorRoutes);
 app.use('/lote',loteRoutes);

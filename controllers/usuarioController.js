@@ -1,5 +1,7 @@
 const Usuario = require("../models/Usuario");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken')
+require ('dotenv').config();
 
 async function buscarPorEmail(email) {
     try{
@@ -25,13 +27,13 @@ async function cadastrarUsuario(req, res) {
     try {
         const existe = await buscarPorEmail(usuarioData.email);
         if (existe) {
-            res.status(400).send("Usuário não pode ser criado, já existe um com este email.");
+            res.status(400).json({error:"Usuário não pode ser criado, já existe um com este email."});
         } else {
             await Usuario.create(usuarioData);
-            res.status(201).send("Usuário criado com sucesso.");
+            res.status(201).json({sucess:"Usuário criado com sucesso."});
         }
     } catch (error) {
-        res.status(500).send(JSON.stringify(error));
+        res.status(500).json({error:`Erro ao criar Usuário.`,details:error.message});
     }
 }
 
@@ -41,17 +43,26 @@ async function loginUsuario(req, res) {
         email: req.body.email,
         password: req.body.password
     };
-    const usuario = await buscarPorEmail(usuarioData.email);
-    if(usuario != null){
-        const senhaValida = await bcrypt.compare(usuarioData.password, usuario.password);
-        if(!senhaValida){
-            return res.send("Senha incorreta.")
+    try {
+        const usuario = await buscarPorEmail(usuarioData.email);
+        if (!usuario) {
+            return res.status(404).json({ error: "Usuário não encontrado." });
         }
 
-        res.send("Login bem sucedido.")
-    }
-    else{
-        res.send("Usuário não encontrado.")
+        const senhaValida = await bcrypt.compare(usuarioData.password, usuario.password);
+        if (!senhaValida) {
+            return res.status(401).json({ error: "Senha incorreta." });
+        }
+
+        const token = jwt.sign(
+            {id:usuario.id,email:usuario.email},
+            process.env.SECRET_KEY,
+            {expiresIn: '1h'}
+        );
+
+        res.status(200).json({ message: "Login bem-sucedido." ,token:token});
+    } catch (error) {
+        res.status(500).json({ error: "Erro no login.", details: error.message });
     }
 }
 

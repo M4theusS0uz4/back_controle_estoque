@@ -8,6 +8,6 @@ router.get('/produtos', getProdutos );
 router.post('/cadastro', multer.single('imagem'),criarProduto);
 router.get('/produto',getProduto);
 router.put('/atualizar',updateProduto);
-router.delete()
+// router.delete()
 
 module.exports = router;
