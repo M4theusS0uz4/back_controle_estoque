@@ -3,9 +3,10 @@ const {DataTypes} = require('sequelize');
 
 const Estoque = sequelize.define('estoque', {
     id_estoque:{
-        id_estoque:DataTypes.INTEGER,
+        type:DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
+        autoIncrement:true,
     },
     id_espec_prod:{
         type: DataTypes.INTEGER,

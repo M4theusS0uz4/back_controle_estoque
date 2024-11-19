@@ -37,6 +37,7 @@ async function getProdutos(req, res) {
     return res.json(produtos);
 }
 
+
 async function getProduto(req,res){
     const id_prod = req.body.id_prod;
     try{

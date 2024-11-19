@@ -2,7 +2,7 @@ const {DataTypes} = require('sequelize');
 const sequelize = require('../config/database');
 
 
-const Especificacoes_prod = sequelize.define('Especificacoes_prod', {
+const Especificacoes_prod = sequelize.define('Especificacoes_produto', {
     id_espec_prod:{
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -27,6 +27,6 @@ const Especificacoes_prod = sequelize.define('Especificacoes_prod', {
         values: ['Masculino, Feminino'],
         allowNull: false,
     }
-},{tableName: 'especificacoes_prod'});
+},{tableName: 'especificacoes_produto'});
 
 module.exports = Especificacoes_prod;
