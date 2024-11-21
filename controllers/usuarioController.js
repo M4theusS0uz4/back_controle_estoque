@@ -1,6 +1,8 @@
 const Usuario = require("../models/Usuario");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken')
+const nodemailer = require("nodemailer");
+const Produto = require("../models/Produto");
 require ('dotenv').config();
 
 async function buscarPorEmail(email) {
@@ -66,8 +68,59 @@ async function loginUsuario(req, res) {
     }
 }
 
+const configEmail = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // Define como `false` para usar STARTTLS
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
+
+
+async function recuperarSenha(req, res) {
+    const { email } = req.body;
+
+    try {
+        // Verifica se o usuário existe
+        const usuario = await buscarPorEmail(email);
+        if (!usuario) {
+            return res.status(404).json({ error: "Usuário não encontrado." });
+        }
+
+        // Gera uma senha temporária
+        const tempPassword = Math.random().toString(36).slice(-8);
+        const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+        // Atualiza a senha no banco de dados
+        await Usuario.update(
+            { password: hashedPassword }, // Atualiza o campo correto no modelo
+            { where: { email: usuario.email } }
+        );
+
+        // Configura o email a ser enviado
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Recuperação de Senha",
+            text: `Olá, sua nova senha temporária é: ${tempPassword}\nPor favor, altere sua senha assim que acessar sua conta.`,
+        };
+
+        // Envia o email
+        await configEmail.sendMail(mailOptions);
+
+        // Responde ao cliente
+        res.status(200).json({ message: "Senha temporária enviada para o email." });
+    } catch (error) {
+        console.error("Erro na recuperação de senha:", error);
+        res.status(500).json({ error: "Erro ao redefinir senha.", details: error.message });
+    }
+}
+
 
 module.exports = {
     cadastrarUsuario,
-    loginUsuario
+    loginUsuario,
+    recuperarSenha
 };
