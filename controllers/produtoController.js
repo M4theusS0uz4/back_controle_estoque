@@ -1,5 +1,8 @@
 const Produto = require('../models/Produto');
 const error = require("multer/lib/multer-error");
+const Estoque = require('../models/Estoque');
+const Especificacao = require('../models/Especificacoes_prod');
+
 
 async function criarProduto(req, res) {
     const { nome_prod, marca_prod, preco_unit, num_lote } = req.body;
@@ -83,9 +86,65 @@ async function getProdutoId(id_prod){
     }
 }
 
+async function getProdutoForType(req, res) {
+    const { type } = req.body;  // Recebe o tipo de especificação desejado
+
+    try {
+        // 1. Buscar as especificações que têm o tipo igual ao parâmetro 'type'
+        const especificacoes = await Especificacao.findAll({
+            where: {
+                tipo: type  // Filtra pelo tipo da especificação
+            },
+            attributes: ['id_espec_prod']  // Apenas os IDs das especificações
+        });
+
+        // Se não encontrar nenhuma especificação com o tipo informado
+        if (especificacoes.length === 0) {
+            return res.status(404).json({ error: "Nenhuma especificação encontrada com esse tipo." });
+        }
+
+        // 2. Extrair os IDs das especificações encontradas
+        const idsEspecificacao = especificacoes.map(espec => espec.id_espec_prod);
+
+        // 3. Buscar os produtos no estoque que possuem esses IDs de especificação
+        const estoqueComEspecificacoes = await Estoque.findAll({
+            where: {
+                id_espec_prod: idsEspecificacao  // Filtra o estoque pelos IDs das especificações
+            },
+            attributes: ['id_prod', 'id_espec_prod', 'quant_atual', 'quant_max', 'quant_min'],  // Campos desejados do estoque
+        });
+
+        // Se não encontrar nenhum produto no estoque
+        if (estoqueComEspecificacoes.length === 0) {
+            return res.status(404).json({ error: "Nenhum produto encontrado para as especificações desse tipo." });
+        }
+
+        // 4. Extrair os IDs dos produtos encontrados no estoque
+        const idsProdutos = estoqueComEspecificacoes.map(item => item.id_prod);
+
+        // 5. Buscar os detalhes dos produtos usando os IDs
+        const produtos = await Produto.findAll({
+            where: {
+                id_prod: idsProdutos  // Filtra os produtos pelos IDs encontrados no estoque
+            }
+        });
+
+        // Se não encontrar nenhum produto
+        if (produtos.length === 0) {
+            return res.status(404).json({ error: "Nenhum produto encontrado." });
+        }
+
+        // Retorna os produtos encontrados
+        return res.status(200).json(produtos);
+    } catch (erro) {
+        console.error(erro);
+        res.status(500).send('Erro ao procurar produtos por tipo: ' + erro.message);  // Caso ocorra algum erro
+    }
+}
+
 async function deleteProduto(req,res){
 
 }
 
 
-module.exports = {getProdutos,criarProduto,getProduto,updateProduto,getProdutoId};
+module.exports = {getProdutos,criarProduto,getProduto,updateProduto,getProdutoId,getProdutoForType};

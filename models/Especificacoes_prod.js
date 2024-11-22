@@ -1,7 +1,6 @@
 const {DataTypes} = require('sequelize');
 const sequelize = require('../config/database');
 
-
 const Especificacoes_prod = sequelize.define('Especificacoes_produto', {
     id_espec_prod:{
         type: DataTypes.INTEGER,
@@ -28,5 +27,6 @@ const Especificacoes_prod = sequelize.define('Especificacoes_produto', {
         allowNull: false,
     }
 },{tableName: 'especificacoes_produto'});
+
 
 module.exports = Especificacoes_prod;

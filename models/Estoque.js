@@ -1,6 +1,7 @@
 const sequelize = require('../config/database');
 const {DataTypes} = require('sequelize');
 
+
 const Estoque = sequelize.define('estoque', {
     id_estoque:{
         type:DataTypes.INTEGER,
@@ -12,7 +13,7 @@ const Estoque = sequelize.define('estoque', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'especificacoes_prod',
+            model: 'especificacoes_produto',
             key:'id_espec_prod',
         }
     },
