@@ -19,7 +19,7 @@ async function criarProduto(req, res) {
             marca_prod,
             preco_unit,
             num_lote,  // Chave estrangeira do lote
-            imagem_url: imagemUrl,  // Salvando o caminho da imagem
+            url_img: imagemUrl,  // Salvando o caminho da imagem
         });
 
         // Retorna o produto criado
@@ -42,7 +42,11 @@ async function getProduto(req,res){
     const id_prod = req.body.id_prod;
     try{
         const produto = await Produto.findOne({where:{id_prod:id_prod}});
-        return res.status(200).json(produto);
+        if(produto) {
+            return res.status(200).json(produto);
+        }else{
+            return null;
+        }
     }catch (erro){
         console.log(erro);
         return res.status(500).send('Erro ao procurar produto.');
@@ -69,10 +73,11 @@ async function updateProduto(req,res){
         return res.status(500).send('Erro ao atualizar produto: ' + error.message);
     }
 }
+
 async function getProdutoId(id_prod){
     try{
         const produto = await Produto.findOne({where:{id_prod:id_prod}});
-       return produto||null;
+        return produto||null;
     }catch (erro){
         console.log(erro);
     }
@@ -83,4 +88,4 @@ async function deleteProduto(req,res){
 }
 
 
-module.exports = {getProdutos,criarProduto,getProduto,updateProduto};
+module.exports = {getProdutos,criarProduto,getProduto,updateProduto,getProdutoId};
