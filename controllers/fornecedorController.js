@@ -27,7 +27,7 @@ async function cadastroFornecedor(req, res) {
         const endereco = response.data.logradouro + response.data.numero + response.data.complemento + response.data.cep;
         const fornecedor = {
             "nome_forn":response.data.nome,
-            "cnpj":cnpj,
+            "cnpj":cnpj.replace(/\.$/,''),
             "telefone":response.data.telefone,
             "email":response.data.email,
             "endereco": endereco
@@ -36,7 +36,7 @@ async function cadastroFornecedor(req, res) {
         res.status(200).json({message:"Fornercedor Cadastrado."});
     }catch(error){
         console.log(error);
-        res.send(500).json({message:"Erro ao busca CPF:"});
+        res.status(500).json({message:"Erro ao busca CPNJ:" +error});
     }
     }
 }

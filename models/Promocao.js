@@ -4,7 +4,7 @@ const sequelize = require('../config/database');
 const Promocao = sequelize.define(
     'Promocao',
     {
-        id: {
+        id_promo: {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
