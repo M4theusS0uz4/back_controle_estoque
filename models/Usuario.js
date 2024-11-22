@@ -24,6 +24,16 @@ const Usuario = sequelize.define("Usuario", {
     ultimo_nome:{
         type: DataTypes.STRING,
         allowNull: true,
+    },
+    is_admin:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: false,
+    },
+    is_admin_geral:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: false,
     }
         }, /*Fechamento das colunas */
     {

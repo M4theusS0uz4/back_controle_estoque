@@ -1,6 +1,6 @@
 const express = require('express');
 const {cadastrarLote} = require('../controllers/loteController');
-const router = require("./produtoRoutes");
+const router = express.Router();
 
 router.post('/cadastro', cadastrarLote);
 

@@ -18,7 +18,7 @@ async function cadastrarLote(req, res) {
         quant_recebida:req.body.quant_recebida,
         tipo_recebido:req.body.tipo_recebido,
     };
-    if(['tenis', 'bota', 'chinelo', 'chuteira'].includes(loteData.tipo_recebido.toLowerCase())) {
+    if(['tenis', 'bota', 'chinelo', 'chuteira'].includes(loteData.tipo_recebido)) {
         const existe = await getLote(loteData.num_lote);
         if (existe) {
             res.status(400).send('Já existe um lote com esse número.');

@@ -5,6 +5,7 @@ const loteRoutes = require('./routes/loteRoutes');
 const fornecedorRoutes = require('./routes/fornecedorRoutes');
 const estoqueRoutes = require('./routes/estoqueRoutes');
 const especificacacaoRoutes = require('./routes/especificacaoRoutes');
+const promocaoRoutes = require('./routes/promocaoRoutes');
 const path = require("path");
 const cors = require('cors');
 
@@ -23,6 +24,8 @@ app.use('/lote',loteRoutes);
 app.use('/estoque', estoqueRoutes)
 app.use('/especificacoes',especificacacaoRoutes)
 app.use('/uploads',express.static(path.join(__dirname,'uploads')));
+app.use('/promocao',promocaoRoutes);
+
 
 app.get('/',(req, res) => {
     res.send('Hello Word!');
