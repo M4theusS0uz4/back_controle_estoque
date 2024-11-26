@@ -117,10 +117,31 @@ async function recuperarSenha(req, res) {
         res.status(500).json({ error: "Erro ao redefinir senha.", details: error.message });
     }
 }
+async function cadastrarUsuarioFuncionario(req, res) {
+    const usuarioData = {
+        email: req.body.email,
+        password: req.body.password,
+        primeiro_nome: req.body.primeiro_nome,
+        ultimo_nome: req.body.ultimo_nome,
+        is_admin:true,
+    };
 
+    try {
+        const existe = await buscarPorEmail(usuarioData.email);
+        if (existe) {
+            res.status(400).json({error:"Funcionário não pode ser criado. Já existe um funcionário semelhante."});
+        } else {
+            await Usuario.create(usuarioData);
+            res.status(201).json({sucess:"Usuário cadastrado com sucesso."});
+        }
+    } catch (error) {
+        res.status(500).json({error:`Erro ao criar Usuário.`,details:error.message});
+    }
+}
 
 module.exports = {
     cadastrarUsuario,
     loginUsuario,
-    recuperarSenha
+    recuperarSenha,
+    cadastrarUsuarioFuncionario
 };
