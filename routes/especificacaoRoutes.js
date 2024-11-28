@@ -3,6 +3,6 @@ const {getEspecificacao} = require('../controllers/especificacaoController');
 const router = express.Router();
 
 
-router.get('/especificacao', getEspecificacao);
+router.post('/especificacao', getEspecificacao);
 
 module.exports = router;

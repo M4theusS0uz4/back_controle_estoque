@@ -41,4 +41,17 @@ async function cadastroFornecedor(req, res) {
     }
 }
 
-module.exports = {cadastroFornecedor};
+async function getAllFornecedores(req,res){
+    try{
+    const fornecedores = await Fornecedor.findAll();
+    if(fornecedores){
+        res.status(200).json(fornecedores);
+    }else{
+        res.status(500).json({message:"Erro ao buscar fornecedores."})
+    }
+    }catch (erro){
+        res.status(500).json({message:"Erro ao buscar fornecedores."+erro})
+    }
+}
+
+module.exports = {cadastroFornecedor,getAllFornecedores};

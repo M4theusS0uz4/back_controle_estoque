@@ -11,7 +11,8 @@ async function getEspecificacao(req, res) {
             res.status(200).json(especificacao);
         }
     }catch (erro){
-        res.status(500).json(erro);
+        console.log(erro)
+        res.status(500).json("erro"+erro);
     }
 }
 
