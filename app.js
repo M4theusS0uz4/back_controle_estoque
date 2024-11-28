@@ -8,7 +8,8 @@ const especificacacaoRoutes = require('./routes/especificacaoRoutes');
 const promocaoRoutes = require('./routes/promocaoRoutes');
 const path = require("path");
 const cors = require('cors');
-
+const movimentacaoRoutes = require('./routes/movimentacaoRoutes');
+const pedidoRoutes = require('./routes/pedidoRoutes');
 
 const app = express();
 app.use(express.json());
@@ -25,6 +26,8 @@ app.use('/estoque', estoqueRoutes)
 app.use('/especificacoes',especificacacaoRoutes)
 app.use('/uploads',express.static(path.join(__dirname,'uploads')));
 app.use('/promocao',promocaoRoutes);
+app.use('/movimentacao',movimentacaoRoutes)
+app.use('/pedido',pedidoRoutes)
 
 
 app.get('/',(req, res) => {

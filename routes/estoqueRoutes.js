@@ -1,8 +1,10 @@
 const express = require('express');
-const {cadastrarEstoque} = require('../controllers/estoqueController');
+const {cadastrarEstoque,getAllEstoque,getAllEstoqueFun} = require('../controllers/estoqueController');
 
 const router = express.Router();
 
 router.post('/cadastro',cadastrarEstoque);
+router.get('/produtosEstoque',getAllEstoque);
+router.get('/estoques',getAllEstoqueFun);
 
 module.exports = router;

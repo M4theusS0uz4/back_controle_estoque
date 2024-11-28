@@ -141,9 +141,6 @@ async function getProdutoForType(req, res) {
     }
 }
 
-async function deleteProduto(req,res){
-
-}
 
 
 module.exports = {getProdutos,criarProduto,getProduto,updateProduto,getProdutoId,getProdutoForType};

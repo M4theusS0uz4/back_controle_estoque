@@ -36,10 +36,6 @@ const Estoque = sequelize.define('estoque', {
     quant_min:{
         type: DataTypes.INTEGER,
         allowNull: false,
-    },
-    url_img:{
-        type: DataTypes.STRING,
-        allowNull: true,
     }
 },{
     tableName: 'estoque',

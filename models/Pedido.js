@@ -6,6 +6,7 @@ const Pedido = sequelize.define('Pedido', {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
+        autoIncrement:true,
     },
     id_user:{
         type: DataTypes.INTEGER,
@@ -15,17 +16,19 @@ const Pedido = sequelize.define('Pedido', {
             key: 'id_user',
         }
     },
-    data_vend:{
-        type: DataTypes.DATE,
-        allowNull: false,
-    },
-    status:{
-        type: DataTypes.ENUM,
-        allowNull: false,
-        values: ['Em andamento', 'Concluido', 'Cancelado'],
-    },
     valor_tot:{
         type: DataTypes.DECIMAL,
+        allowNull: false,
+    },id_estoque:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references:{
+            model: 'estoque',
+            key: 'id_estoque',
+            }
+        },
+    quantidade:{
+        type: DataTypes.INTEGER,
         allowNull: false,
     }
 },
