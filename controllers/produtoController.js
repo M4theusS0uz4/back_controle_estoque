@@ -24,9 +24,8 @@ async function criarProduto(req, res) {
             num_lote,  // Chave estrangeira do lote
             url_img: imagemUrl,  // Salvando o caminho da imagem
         });
-
         // Retorna o produto criado
-        return res.status(201).send("Produto com imagem cadastrado com sucesso.");
+        return res.status(201).json({message:"Produto com imagem cadastrado com sucesso.", data:novoProduto.id_prod});
     } catch (error) {
         console.error(error);
         return res.status(500).send('Erro ao cadastrar o produto: ' + error.message);

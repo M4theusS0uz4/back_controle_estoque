@@ -1,8 +1,9 @@
 const Lote = require('../models/Lote');
+const Fornecedor = require("../models/Fornecedor");
 
 async function getLote(num_lote) {
     try {
-        const lote = await Lote.findOne({whrere: {num_lote:num_lote}});
+        const lote = await Lote.findOne({where: {num_lote:num_lote}});
         return !!lote;
     }
     catch(e) {
@@ -32,6 +33,19 @@ async function cadastrarLote(req, res) {
 
 }
 
+async function getAllLotes(req,res){
+    try{
+        const lotes = await Lote.findAll();
+        if(lotes){
+            res.status(200).json(lotes);
+        }else{
+            res.status(500).json({message:"Erro ao buscar lotes."})
+        }
+    }catch (erro){
+        res.status(500).json({message:"Erro ao buscar lotes."+erro})
+    }
+}
+
 module.exports ={
-  cadastrarLote,
+  cadastrarLote,getAllLotes
 };
