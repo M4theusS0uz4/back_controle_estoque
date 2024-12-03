@@ -46,6 +46,7 @@ async function loginUsuario(req, res) {
         password: req.body.password
     };
     try {
+        let role;
         const usuario = await buscarPorEmail(usuarioData.email);
         if (!usuario) {
             return res.status(404).json({ error: "Usuário não encontrado." });
@@ -56,13 +57,21 @@ async function loginUsuario(req, res) {
             return res.status(401).json({ error: "Senha incorreta." });
         }
 
+        if(usuario.is_admin){
+            role = 'funcionario';
+        }else if(usuario.is_admin && usuario.is_admin_geral){
+            role = 'adming';
+        }else{
+            role = 'guest';
+        }
+
         const token = jwt.sign(
             {id:usuario.id_user,email:usuario.email},
             process.env.SECRET_KEY,
             {expiresIn: '1h'}
         );
 
-        res.status(200).json({ message: "Login bem-sucedido." ,token:token});
+        res.status(200).json({ message: "Login bem-sucedido." ,token:token, role:role});
     } catch (error) {
         res.status(500).json({ error: "Erro no login.", details: error.message });
     }

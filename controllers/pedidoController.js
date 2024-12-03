@@ -1,5 +1,6 @@
 const Pedido = require('../models/Pedido');
 const Estoque = require('../models/Estoque');
+const Produto = require('../models/Produto');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -46,4 +47,54 @@ async function fazerPedido(req, res) {
     }
 }
 
-module.exports = {fazerPedido,}
+async function relatorioVendas(req, res) {
+    try {
+        // Buscar os pedidos (vendas)
+        const vendas = await Pedido.findAll();
+        if (vendas.length === 0) {
+            return res.status(404).json({ error: "Nenhuma venda encontrada." });
+        }
+
+        // Mapear os IDs dos estoques das vendas
+        const listaIds = vendas.map((venda) => venda.id_estoque);
+
+        // Buscar os estoques correspondentes
+        const estoques = await Estoque.findAll({ where: { id_estoque: listaIds } });
+        if (estoques.length === 0) {
+            return res.status(404).json({ error: "Nenhum estoque correspondente encontrado." });
+        }
+
+        // Mapear os IDs dos produtos dos estoques
+        const id_produtos = estoques.map((estoque) => estoque.id_prod);
+
+        // Buscar os produtos correspondentes
+        const produtos = await Produto.findAll({ where: { id_prod: id_produtos } });
+        if (produtos.length === 0) {
+            return res.status(404).json({ error: "Nenhum produto correspondente encontrado." });
+        }
+
+        // Preparar o retorno
+        const resultado = {
+            vendas,
+            produtos,
+            estoques,
+        };
+
+        // Retornar os produtos e vendas
+        return res.status(200).json(resultado);
+    } catch (error) {
+        console.error("Erro ao gerar relatório de vendas:", error);
+        return res.status(500).json({ error: "Erro interno ao gerar o relatório de vendas." });
+    }
+}
+
+async function getAllPedidos(req,res){
+    try {
+        const pedidos = await Pedido.findAll();
+        res.status(200).json(pedidos);
+    } catch (erro){
+        res.status(400).json('Erro:'+erro)
+    }
+}
+
+module.exports = {fazerPedido,relatorioVendas,getAllPedidos}

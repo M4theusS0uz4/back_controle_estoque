@@ -19,7 +19,7 @@ async function realizarEntrada(req,res){
     const {id_estoque,quantidade} = req.body;
 
     try{
-        const movimentacao =  await Movimentacao.create({id_estoque:id_estoque,tipo_movimento:"Entrda",quantidade:quantidade});
+        const movimentacao =  await Movimentacao.create({id_estoque:id_estoque,tipo_movimento:"Entrada",quantidade:quantidade});
         if(movimentacao){
             res.status(200).send(movimentacao);
         }else{
@@ -30,4 +30,17 @@ async function realizarEntrada(req,res){
     }
 }
 
-module.exports = {compraMovimentacao,realizarEntrada}
+async function getAllMovimentacoes(req,res){
+    try{
+        const movimentacacoes = await Movimentacao.findAll();
+        if(movimentacacoes && movimentacacoes.length > 0){
+            res.status(200).send(movimentacacoes);
+        }else{
+            res.status(400).json("Movimentações não encontradas.")
+        }
+    }catch (erro){
+        res.status(400).json("erro: "+erro)
+    }
+}
+
+module.exports = {compraMovimentacao,realizarEntrada,getAllMovimentacoes}
