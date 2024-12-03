@@ -74,5 +74,26 @@ async function getAllPromocao(req, res) {
         res.status(500).json({ error: "Erro ao gerar promoções: " + error.message });
     }
 }
+async function delPromocao(req, res) {
+    const { id } = req.params; // id_prod é o identificador da promoção
 
-module.exports = {createPromocao, getAllPromocao};
+    try {
+        // Busca a promoção pelo ID
+        const promocao = await Promocao.findByPk(id);
+        console.log(id)
+        if (!promocao) {
+            return res.status(404).json({ error: "Promoção não encontrada." });
+        }
+
+        // Remove a promoção
+        await promocao.destroy();
+
+        // Responde com sucesso
+        res.status(200).json({ message: "Promoção removida com sucesso." });
+    } catch (error) {
+        // Captura erros e responde com erro
+        res.status(500).json({ error: `Erro ao remover promoção: ${error.message}` });
+    }
+}
+
+module.exports = {createPromocao, getAllPromocao,delPromocao};
